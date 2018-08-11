@@ -1,0 +1,7 @@
+---
+- name: Create full configuration
+  template:
+    src: "{{ ansible_network_os }}/base.j2"
+    dest: "{{ host_conf_dir }}/{{ hostname }}.ansible"
+  changed_when: no
+  check_mode: no

@@ -1,0 +1,6 @@
+---
+- name: Loop over host_vars yaml files to create inventory
+  include: files/add_host_loop.yaml filename="{{ item }}"
+  with_fileglob: "{{ inventory_dir }}/host_vars/*.yaml"
+  changed_when: no
+  check_mode: no

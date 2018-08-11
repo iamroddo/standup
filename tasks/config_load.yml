@@ -1,0 +1,7 @@
+---
+- name: Replace running configuration
+  nxos_config:
+    replace: config
+    diff_against: running
+    save: yes
+    replace_src: "{{ host_conf_dir }}/{{ hostname }}.ansible"

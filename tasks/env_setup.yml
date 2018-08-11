@@ -1,0 +1,40 @@
+---
+- name: Create durable inventory directory variable
+  set_fact:
+    data_dir: "{{ hostvars['localhost']['inventory_dir'] }}"
+  changed_when: no
+  check_mode: no
+
+- name: Assign folder to store configs & diffs
+  set_fact:
+    host_conf_dir: "{{ data_dir }}/{{ conf_dir }}/{{ hostname }}"
+  changed_when: no
+  check_mode: no
+
+- name: Make sure there are no remains of derived configs from a previous run
+  file:
+    path: "{{ host_conf_dir }}"
+    state: absent
+  changed_when: no
+  check_mode: no
+
+- name: Create fresh folder to store configs backups
+  file:
+    path: "{{ host_conf_dir }}"
+    state: directory
+  changed_when: no
+  check_mode: no
+
+- name: Remove previous reports temp folder
+  file:
+    path: "{{ inventory_dir }}/reports/tmp/"
+    state: absent
+  changed_when: no
+  check_mode: no
+
+- name: Create fresh reports temp folder
+  file:
+    path: "{{ data_dir }}/reports/tmp/"
+    state: directory
+  changed_when: no
+  check_mode: no

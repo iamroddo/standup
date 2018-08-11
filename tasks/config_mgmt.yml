@@ -1,0 +1,31 @@
+---
+- name: Create checkpoint file
+  nxos_rollback:
+    checkpoint_file: "{{ hostname }}.checkpoint"
+  changed_when: no
+
+- name: Backup running config to bootflash
+  nxos_command:
+    commands:
+      - delete bootflash:backup.cfg no-prompt
+      - copy running-config bootflash:backup.cfg
+
+- name: Download backup running config from bootflash
+  net_get:
+    src: backup.cfg
+    dest: "{{ host_conf_dir }}/{{ hostname }}.running"
+
+- name: Back up created checkpoint from bootflash
+  net_get:
+    src: "{{ hostname }}.checkpoint"
+    dest: "{{ host_conf_dir }}/{{ hostname }}.checkpoint"
+
+- name: Delete earlier generated config file on bootflash
+  nxos_command:
+    commands:
+      - "delete bootflash:///{{ hostname }}.ansible no-prompt"
+
+- name: Copy generated config file to bootflash
+  net_put:
+    src: "{{ host_conf_dir }}/{{ hostname }}.ansible"
+    dest: "{{ hostname }}.ansible"

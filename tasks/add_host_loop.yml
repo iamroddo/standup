@@ -1,0 +1,12 @@
+---
+- name: Include device host variables from - {{ filename }}
+  include_vars:
+    file: "{{ filename }}"
+
+- name: Add to in memory inventory - {{ hostname }}
+  add_host:
+    name: "{{ hostname }}"
+    group: "{{ type }}"
+    ansible_host: "{{ ansible_host }}"
+    changed_when: no
+    check_mode: no
